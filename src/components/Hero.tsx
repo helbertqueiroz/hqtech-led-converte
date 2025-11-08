@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import heroImage from "@/assets/hero-church-led.jpg";
+import logoHQTech from "@/assets/logo-hqtech.svg";
 
 const Hero = () => {
   const scrollToForm = () => {
@@ -25,6 +26,15 @@ const Hero = () => {
       {/* Content */}
       <div className="container-custom relative z-10 text-center px-4">
         <div className="max-w-4xl mx-auto animate-fade-in">
+          {/* Logo */}
+          <div className="mb-8 flex justify-center">
+            <img 
+              src={logoHQTech} 
+              alt="HQ Tech" 
+              className="h-16 md:h-20 lg:h-24 w-auto"
+            />
+          </div>
+          
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-primary-foreground mb-6 leading-tight">
             Painéis de LED para Igrejas com{" "}
             <span className="text-gradient">Parcelamento em até 48x</span>
