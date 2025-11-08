@@ -1,8 +1,35 @@
 import { useEffect } from "react";
 
+declare global {
+  interface Window {
+    hbspt: any;
+  }
+}
+
 const ContactForm = () => {
   useEffect(() => {
-    // HubSpot form will be automatically loaded by the script in index.html
+    const script = document.createElement('script');
+    script.src = 'https://js.hsforms.net/forms/embed/v3.js';
+    script.async = true;
+    script.charset = 'utf-8';
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      if (window.hbspt) {
+        window.hbspt.forms.create({
+          region: "na1",
+          portalId: "43624841",
+          formId: "e73a190c-dfa0-4352-b864-39ba9bdb537a",
+          target: '#hubspot-form'
+        });
+      }
+    };
+
+    return () => {
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
   }, []);
 
   return (
@@ -20,12 +47,7 @@ const ContactForm = () => {
           
           {/* HubSpot Form Container */}
           <div className="bg-card rounded-2xl shadow-medium p-6 md:p-8 border border-border/50">
-            <div 
-              className="hs-form-frame" 
-              data-region="na1" 
-              data-form-id="e73a190c-dfa0-4352-b864-39ba9bdb537a" 
-              data-portal-id="43624841"
-            />
+            <div id="hubspot-form"></div>
           </div>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
