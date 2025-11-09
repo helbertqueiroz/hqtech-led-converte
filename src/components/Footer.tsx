@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail, Instagram, Youtube, Linkedin } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import logoHQTech from "@/assets/logo-hqtech.svg";
 
 const Footer = () => {
@@ -13,39 +13,10 @@ const Footer = () => {
               alt="HQ Tech" 
               className="h-12 w-auto mb-4"
             />
-            <p className="text-primary-foreground/80 leading-relaxed mb-6">
+            <p className="text-primary-foreground/80 leading-relaxed">
               Especialistas em soluções audiovisuais profissionais para igrejas, 
               com mais de 10 anos de experiência no mercado.
             </p>
-            <div className="flex gap-4">
-              <a
-                href="https://instagram.com/hqtech"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-accent/10 hover:bg-accent flex items-center justify-center transition-colors duration-300"
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5" />
-              </a>
-              <a
-                href="https://youtube.com/@hqtech"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-accent/10 hover:bg-accent flex items-center justify-center transition-colors duration-300"
-                aria-label="YouTube"
-              >
-                <Youtube className="h-5 w-5" />
-              </a>
-              <a
-                href="https://linkedin.com/company/hqtech"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-accent/10 hover:bg-accent flex items-center justify-center transition-colors duration-300"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="h-5 w-5" />
-              </a>
-            </div>
           </div>
 
           {/* Contact USA */}
@@ -76,7 +47,7 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold text-lg mb-4 text-accent">Brasil</h4>
             <div className="space-y-3 text-sm text-primary-foreground/80">
-              <p className="font-medium text-primary-foreground">HQ TECH COMÉRCIO E REPRESENTAÇÃO</p>
+              <p className="font-medium text-primary-foreground">HQ Tech Comércio Importação, Exportação e Representação</p>
               <div className="flex items-start gap-2">
                 <MapPin className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
                 <p>Av. Osvaldo Reis, 3385<br />Ed. Riviera Concept<br />Praia Brava, Itajaí – SC, 88306-001</p>

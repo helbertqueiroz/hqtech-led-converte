@@ -18,6 +18,8 @@ const Hero = () => {
         <img
           src={heroImage}
           alt="Painel de LED instalado em igreja"
+          loading="eager"
+          fetchPriority="high"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-navy-dark/95 via-navy/90 to-navy-dark/95" />
