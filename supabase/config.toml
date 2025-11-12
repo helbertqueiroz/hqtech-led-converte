@@ -1,1 +1,4 @@
 project_id = "hvmfepnmiamllvohxoxl"
+
+[functions.hubspot-led-igrejas]
+verify_jwt = false
