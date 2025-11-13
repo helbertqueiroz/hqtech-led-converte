@@ -48,6 +48,7 @@ const Hero = () => {
             size="lg"
             onClick={scrollToForm}
             className="bg-accent hover:bg-gold-light text-accent-foreground font-semibold text-lg px-8 py-6 rounded-full shadow-medium hover-lift whitespace-nowrap"
+            translate="no"
           >
             Solicite seu orçamento agora
             <ArrowRight className="ml-2 h-5 w-5" />
