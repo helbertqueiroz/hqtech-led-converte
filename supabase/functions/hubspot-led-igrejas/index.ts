@@ -27,11 +27,6 @@ const handler = async (req: Request): Promise<Response> => {
     const formData: FormData = await req.json();
     console.log("Form data received:", formData);
 
-    const hubspotToken = Deno.env.get("HUBSPOT_PRIVATE_APP_TOKEN");
-    if (!hubspotToken) {
-      throw new Error("HUBSPOT_PRIVATE_APP_TOKEN not configured");
-    }
-
     const portalId = "43624841";
     const formGuid = "e73a190c-dfa0-4352-b864-39ba9bdb537a";
     
@@ -81,11 +76,10 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending to HubSpot:", JSON.stringify(payload, null, 2));
 
     const hubspotResponse = await fetch(
-      `https://api.hsforms.com/submissions/v3/integration/secure/submit/${portalId}/${formGuid}`,
+      `https://api.hsforms.com/submissions/v3/integration/submit/${portalId}/${formGuid}`,
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${hubspotToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
