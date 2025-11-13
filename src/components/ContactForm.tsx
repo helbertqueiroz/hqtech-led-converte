@@ -21,6 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
@@ -43,6 +51,7 @@ const formSchema = z.object({
   aceitaPrivacidade: z.boolean().refine((val) => val === true, {
     message: "Você deve aceitar a Política de Privacidade",
   }),
+  captcha: z.string().min(1, "Por favor, responda a pergunta de segurança"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -50,6 +59,11 @@ type FormData = z.infer<typeof formSchema>;
 const ContactForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [captchaQuestion] = useState(() => {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 10) + 1;
+    return { question: `Quanto é ${num1} + ${num2}?`, answer: String(num1 + num2) };
+  });
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -63,8 +77,27 @@ const ContactForm = () => {
       comoConheceu: "",
       mensagem: "",
       aceitaPrivacidade: false,
+      captcha: "",
     },
   });
+
+  const formatPhoneNumber = (value: string) => {
+    const numbers = value.replace(/\D/g, "");
+    if (numbers.length <= 10) {
+      return numbers.replace(/(\d{2})(\d{4})(\d{0,4})/, (_, p1, p2, p3) => {
+        let formatted = `(${p1})`;
+        if (p2) formatted += ` ${p2}`;
+        if (p3) formatted += `-${p3}`;
+        return formatted;
+      });
+    }
+    return numbers.replace(/(\d{2})(\d{5})(\d{0,4})/, (_, p1, p2, p3) => {
+      let formatted = `(${p1})`;
+      if (p2) formatted += ` ${p2}`;
+      if (p3) formatted += `-${p3}`;
+      return formatted;
+    });
+  };
 
   const getCookie = (name: string): string | undefined => {
     const value = `; ${document.cookie}`;
@@ -74,6 +107,15 @@ const ContactForm = () => {
   };
 
   const onSubmit = async (data: FormData) => {
+    if (data.captcha !== captchaQuestion.answer) {
+      toast({
+        title: "Resposta incorreta",
+        description: "Por favor, responda corretamente à pergunta de segurança.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -218,7 +260,14 @@ const ContactForm = () => {
                     <FormItem>
                       <FormLabel>Telefone (WhatsApp) *</FormLabel>
                       <FormControl>
-                        <Input placeholder="(47) 93618-0776" {...field} />
+                        <Input
+                          placeholder="(00) 00000-0000"
+                          {...field}
+                          onChange={(e) => {
+                            const formatted = formatPhoneNumber(e.target.value);
+                            field.onChange(formatted);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -280,11 +329,65 @@ const ContactForm = () => {
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <Label>
-                          Li e aceito a Política de Privacidade *
-                        </Label>
+                        <FormLabel>
+                          Li e aceito as{" "}
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <button
+                                type="button"
+                                className="text-primary hover:underline font-medium"
+                              >
+                                políticas de privacidade
+                              </button>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                              <DialogHeader>
+                                <DialogTitle className="text-2xl font-bold mb-4">
+                                  Política de Privacidade – LGPD
+                                </DialogTitle>
+                                <DialogDescription className="text-left space-y-4 text-base">
+                                  <p>
+                                    Nós, da HQ Tech, respeitamos a sua privacidade e garantimos que seus dados serão tratados com segurança e transparência. As informações coletadas neste formulário serão utilizadas exclusivamente para contato comercial, envio de propostas e comunicações relacionadas aos nossos serviços.
+                                  </p>
+                                  
+                                  <div>
+                                    <h3 className="font-semibold text-lg mb-2 text-foreground">Como protegemos seus dados:</h3>
+                                    <ul className="list-disc list-inside space-y-2 ml-2">
+                                      <li>Não compartilhamos suas informações com terceiros sem sua autorização.</li>
+                                      <li>Utilizamos medidas técnicas e administrativas para proteger seus dados contra acessos não autorizados.</li>
+                                      <li>Você pode solicitar a exclusão ou atualização dos seus dados a qualquer momento.</li>
+                                    </ul>
+                                  </div>
+                                  
+                                  <p className="pt-4 border-t">
+                                    Ao marcar "Li e aceito", você concorda com o tratamento dos seus dados conforme descrito nesta política, em conformidade com a Lei Geral de Proteção de Dados (LGPD).
+                                  </p>
+                                </DialogDescription>
+                              </DialogHeader>
+                            </DialogContent>
+                          </Dialog>
+                          {" *"}
+                        </FormLabel>
                         <FormMessage />
                       </div>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="captcha"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Pergunta de segurança: {captchaQuestion.question} *</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Digite sua resposta"
+                          {...field}
+                          type="number"
+                        />
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
